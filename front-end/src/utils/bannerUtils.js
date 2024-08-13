@@ -10,3 +10,13 @@ export const getTimeComponents = (timeRemaining) => {
 
     return { days, hours, minutes, seconds };
 };
+
+export const calculateDeadline = (days, hours, seconds) => {
+    const totalSeconds = (days * 24 * 60 * 60) + (hours * 60 * 60) + seconds;
+  
+    const now = Math.floor(Date.now() / 1000);
+  
+    let deadline = now + totalSeconds;
+  
+    return deadline;
+  };

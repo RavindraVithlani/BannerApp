@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { getTimeComponents } from '../utils/bannerUtils';
 
-const BannerPage = ({ handleDashboard }) => {
-    const [timeRemaining, setTimeRemaining] = useState(0);
+const BannerPage = ({ handleDashboard, timeRemaining, setTimeRemaining }) => {
+    
 
     const endDate = new Date(2024, 7, 15, 9, 0, 0).getTime();
 
@@ -19,8 +19,8 @@ const BannerPage = ({ handleDashboard }) => {
             setTimeRemaining(remainingTime)
         }, 1000);
 
-        return () => clearInterval(id); // Cleanup function
-    }, [endDate]);
+        return () => clearInterval(id);
+    }, [endDate, setTimeRemaining]);
 
     
 

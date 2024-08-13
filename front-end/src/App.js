@@ -6,6 +6,7 @@ import Dashboard from './components/dashboard';
 
 const App = () => {
   const [dashboard, setDashboard] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(0);
   const handleDashboard = ()=>{
     setDashboard(!dashboard);
   }
@@ -15,10 +16,10 @@ const App = () => {
       {!dashboard?
         <>
         
-        <BannerPage handleDashboard = {handleDashboard} />
+        <BannerPage handleDashboard = {handleDashboard} timeRemaining = {timeRemaining} setTimeRemaining = {setTimeRemaining} />
         </>
       :
-        <Dashboard handleDashboard = {handleDashboard}/>
+        <Dashboard handleDashboard = {handleDashboard} setTimeRemaining={setTimeRemaining}/>
       }
     </div>
     

@@ -1,23 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import '../Dashboard.css';  // Import the CSS file
+import React, { useState } from 'react';
+import '../Dashboard.css'; 
+import { calculateDeadline } from '../utils/bannerUtils';
 
-export default function Dashboard({ handleDashboard }) {
+export default function Dashboard({ handleDashboard, setTimeRemaining }) {
     const [isVisible, setIsVisible] = useState(false);
-    const [timer, setTimer] = useState(0);
-    const [countdown, setCountdown] = useState(timer);
     const [days, setDays] = useState(0);
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
-    useEffect(()=>{setTimer(0);},[])
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setCountdown(timer); // Reset the countdown when the banner is updated
+    
+        const duration = calculateDeadline(days, hours, seconds);
+    
+        try {
+            const response = await fetch('http://localhost:5000/api/banner', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {
+                        is_visible: isVisible?'1':'0',
+                        duration: duration
+                    }
+                ),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            if (data.message==='success'){
+                window.alert("Updated successfully!!");
+                setTimeRemaining(duration);
+                handleDashboard(false);
+            }
+        } catch (error) {
+            window.alert("An error occurred")
+            console.error('Error:', error);
+        }
     };
-    const handleVisible = ()=>{
-        setIsVisible(!isVisible)
-    }
+    
     const handleDays = (e) => setDays(parseInt(e.target.value))
     const handleHours = (e) => setHours(parseInt(e.target.value))
     const handleMinutes = (e) => setMinutes(parseInt(e.target.value))
@@ -28,18 +55,19 @@ export default function Dashboard({ handleDashboard }) {
         <div className="dashboard-container">
             <h1 className="dashboard">Dashboard</h1>
             <form onSubmit={handleSubmit} className="dashboard-form">
-                <div className="form-group" style={{display: 'flex'}}>
-                    <label className="form-label">Banner On/Off:</label>
-                    <label className="toggle-switch">
-                        <input 
-                            type="checkbox" 
-                            checked={isVisible} 
-                            onChange={() => handleVisible} 
-                            className="toggle-checkbox" 
-                        />
-                        <span className="slider"></span>
-                    </label>
-                </div>
+            <div className="form-group" style={{display:'flex'}}>
+                <label className="form-label">Banner On/Off:</label>
+                <label className="toggle-switch">
+                    <input 
+                        type="checkbox" 
+                        checked={isVisible} 
+                        onChange={() => setIsVisible(!isVisible)} 
+                        className="toggle-checkbox" 
+                    />
+                    <span className="slider"></span>
+                </label>
+            </div>
+
                 <div className="form-group">
                     <label className="form-label">Banner Timer:</label>
                     <div className="timer-inputs">
@@ -85,10 +113,6 @@ export default function Dashboard({ handleDashboard }) {
                         </div>
                     </div>
                 </div>
-
-                {isVisible && countdown > 0 && (
-                    <p className="countdown">Time remaining: {countdown} seconds</p>
-                )}
                 <button type="submit" className="dashboard-button">Update Banner</button>
             </form>
             <button onClick={handleDashboard} className="home-button">Home</button>
