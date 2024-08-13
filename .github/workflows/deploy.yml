@@ -3,7 +3,7 @@ name: Deploy React App to Server
 on:
   push:
     branches:
-      - main 
+      - main  # Trigger this workflow on pushes to the main branch
 
 jobs:
   deploy:
@@ -33,16 +33,19 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" front-end/build/ $REMOTE_USER@$REMOTE_HOST:/var/www/html/your-react-app/
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" front-end/build/ $REMOTE_USER@$REMOTE_HOST:/home/rjv/build
+          ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "echo $SUDO_PASSWORD | sudo -S cp -r /home/rjv/build/* /var/www/banner.spava.in/"
       
       - name: Restart Apache
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
-          ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST 'sudo systemctl restart apache2'
+          ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "echo $SUDO_PASSWORD | sudo -S systemctl restart apache2"
