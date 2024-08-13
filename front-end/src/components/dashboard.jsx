@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../Dashboard.css';  // Import the CSS file
 
 export default function Dashboard({ handleDashboard }) {
@@ -9,7 +9,7 @@ export default function Dashboard({ handleDashboard }) {
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
-    setTimer(0);
+    useEffect(()=>{setTimer(0);},[])
 
     const handleSubmit = (e) => {
         e.preventDefault();
