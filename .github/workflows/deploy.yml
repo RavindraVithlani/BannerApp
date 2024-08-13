@@ -39,7 +39,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           rsync -avz -e "ssh -o StrictHostKeyChecking=no" front-end/build/ $REMOTE_USER@$REMOTE_HOST:/home/rjv/build
-          ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "echo $SUDO_PASSWORD | sudo -S cp -r /home/rjv/build/* /var/www/banner.spava.in/"
+          ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST "echo $SUDO_PASSWORD | sudo -S cp -r /home/rjv/build/* /var/www/bannerapp.spava.in/"
       
       - name: Restart Apache
         env:
