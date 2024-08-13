@@ -15,6 +15,14 @@ export default function Dashboard({ handleDashboard }) {
         e.preventDefault();
         setCountdown(timer); // Reset the countdown when the banner is updated
     };
+    const handleVisible = ()=>{
+        setIsVisible(!isVisible)
+    }
+    const handleDays = (e) => setDays(parseInt(e.target.value))
+    const handleHours = (e) => setHours(parseInt(e.target.value))
+    const handleMinutes = (e) => setMinutes(parseInt(e.target.value))
+    const handleSeconds = (e) => setSeconds(parseInt(e.target.value))
+
 
     return (
         <div className="dashboard-container">
@@ -26,7 +34,7 @@ export default function Dashboard({ handleDashboard }) {
                         <input 
                             type="checkbox" 
                             checked={isVisible} 
-                            onChange={() => setIsVisible(!isVisible)} 
+                            onChange={() => handleVisible} 
                             className="toggle-checkbox" 
                         />
                         <span className="slider"></span>
@@ -39,7 +47,7 @@ export default function Dashboard({ handleDashboard }) {
                             <input 
                                 type="number" 
                                 value={days} 
-                                onChange={(e) => setDays(parseInt(e.target.value))} 
+                                onChange={handleDays} 
                                 className="form-input timer-input"
                                 placeholder="Days"
                             />
@@ -49,7 +57,7 @@ export default function Dashboard({ handleDashboard }) {
                             <input 
                                 type="number" 
                                 value={hours} 
-                                onChange={(e) => setHours(parseInt(e.target.value))} 
+                                onChange={handleHours} 
                                 className="form-input timer-input"
                                 placeholder="Hours"
                             />
@@ -59,7 +67,7 @@ export default function Dashboard({ handleDashboard }) {
                             <input 
                                 type="number" 
                                 value={minutes} 
-                                onChange={(e) => setMinutes(parseInt(e.target.value))} 
+                                onChange={handleMinutes} 
                                 className="form-input timer-input"
                                 placeholder="Minutes"
                             />
@@ -69,7 +77,7 @@ export default function Dashboard({ handleDashboard }) {
                             <input 
                                 type="number" 
                                 value={seconds} 
-                                onChange={(e) => setSeconds(parseInt(e.target.value))} 
+                                onChange={handleSeconds} 
                                 className="form-input timer-input"
                                 placeholder="Seconds"
                             />
