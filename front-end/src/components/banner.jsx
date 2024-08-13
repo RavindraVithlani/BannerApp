@@ -1,56 +1,66 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getTimeComponents } from '../utils/bannerUtils';
 
-const BannerPage = ({ handleDashboard, timeRemaining, setTimeRemaining }) => {
-    
+const BannerPage = ({ handleDashboard, timeRemaining, setTimeRemaining, setIsVisible, remainingTime }) => {
+  const [endDate, setEndDate] = useState(null);
 
-    const endDate = new Date(2024, 7, 15, 9, 0, 0).getTime();
+  useEffect(() => {
+    const fetchEndDate = async () => {
+      try {
+        const response = await fetch('http://api.spava.in/api/banner');
+        const data = await response.json();
+        const { is_visible, duration } = data;
 
-    useEffect(() => {
-        const id = setInterval(() => {
-            const now = new Date().getTime();
-            const remainingTime = endDate - now;
-            
-            if (remainingTime < 0) {
-                setTimeRemaining(0);
-                return;
-            }
+        console.log(is_visible, duration);
+        setEndDate(duration);
 
-            setTimeRemaining(remainingTime)
-        }, 1000);
+        // Set visibility
+        setIsVisible(is_visible === '0' ? false : true);
+      } catch (error) {
+        console.error('Error fetching end date:', error);
+      }
+    };
 
-        return () => clearInterval(id);
-    }, [endDate, setTimeRemaining]);
+    fetchEndDate();
+  }, [setIsVisible]);
 
-    
+  useEffect(() => {
+    if (endDate === null) return;
 
-    const { days, hours, minutes, seconds } = getTimeComponents(timeRemaining);
+    const id = setInterval(() => {
+      const now = new Date().getTime();
+      const remainingTime = endDate - now;
+      console.log(remainingTime);
+      if (remainingTime < 0) {
+        setTimeRemaining(0);
+        clearInterval(id);
+        return;
+      }
+      setTimeRemaining(remainingTime);
+    }, 1000);
 
-    return (
-        <div className="banner-container">
-            <div className='dashboard-heading'>
-                <p>Dashboard</p>
-                <div onClick={handleDashboard} className='dashboard-button'>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                </div>
-            </div>
-            <div className="banner">
-                <div className="time">
-                    <p className="timer colon">{days}</p>
-                    <p className="timer colon">{hours}</p>
-                    <p className="timer colon">{minutes}</p>
-                    <p className="timer">{seconds}</p>
-                    <p className="heading">Days</p>
-                    <p className="heading">Hours</p>
-                    <p className="heading">Minutes</p>
-                    <p className="heading">Seconds</p>
-                </div>
-            </div>
+    return () => clearInterval(id);
+  }, [endDate, setTimeRemaining]);
+
+  const { days, hours, minutes, seconds } = timeRemaining > 0 
+  ? getTimeComponents(timeRemaining) 
+  : { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  return (
+    <div className="banner-container">
+      <div className="banner">
+        <div className="time">
+          <p className="timer colon">{days}</p>
+          <p className="timer colon">{hours}</p>
+          <p className="timer colon">{minutes}</p>
+          <p className="timer">{seconds}</p>
+          <p className="heading">Days</p>
+          <p className="heading">Hours</p>
+          <p className="heading">Minutes</p>
+          <p className="heading">Seconds</p>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default BannerPage;
-

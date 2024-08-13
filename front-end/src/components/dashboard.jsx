@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import '../Dashboard.css'; 
 import { calculateDeadline } from '../utils/bannerUtils';
 
-export default function Dashboard({ handleDashboard, setTimeRemaining }) {
-    const [isVisible, setIsVisible] = useState(false);
-    const [days, setDays] = useState(0);
-    const [hours, setHours] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [seconds, setSeconds] = useState(0);
+export default function Dashboard({ handleDashboard, setTimeRemaining, isVisible, setIsVisible }) {
+    
+    const [days, setDays] = useState('');
+    const [hours, setHours] = useState('');
+    const [minutes, setMinutes] = useState('');
+    const [seconds, setSeconds] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        const duration = calculateDeadline(days, hours, seconds);
+        const duration = calculateDeadline(days, hours,minutes, seconds);
     
         try {
-            const response = await fetch('http://localhost:5000/api/banner', {
+            const response = await fetch('http://api.spava.in/api/banner', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -72,44 +72,52 @@ export default function Dashboard({ handleDashboard, setTimeRemaining }) {
                     <label className="form-label">Banner Timer:</label>
                     <div className="timer-inputs">
                         <div className="timer-input-group">
-                            <input 
-                                type="number" 
-                                value={days} 
-                                onChange={handleDays} 
-                                className="form-input timer-input"
-                                placeholder="Days"
-                            />
-                            <span className="input-label">Days</span>
+                        <input 
+                            type="number" 
+                            value={days} 
+                            onChange={handleDays} 
+                            className="form-input timer-input"
+                            placeholder="Days"
+                            min="1"
+                            required
+                        />
+                        <span className="input-label">Days</span>
                         </div>
                         <div className="timer-input-group">
-                            <input 
-                                type="number" 
-                                value={hours} 
-                                onChange={handleHours} 
-                                className="form-input timer-input"
-                                placeholder="Hours"
-                            />
-                            <span className="input-label">Hours</span>
+                        <input 
+                            type="number" 
+                            value={hours} 
+                            onChange={handleHours} 
+                            className="form-input timer-input"
+                            placeholder="Hours"
+                            min="1"
+                            required
+                        />
+                        <span className="input-label">Hours</span>
                         </div>
                         <div className="timer-input-group">
-                            <input 
-                                type="number" 
-                                value={minutes} 
-                                onChange={handleMinutes} 
-                                className="form-input timer-input"
-                                placeholder="Minutes"
-                            />
-                            <span className="input-label">Minutes</span>
+                        <input 
+                            type="number" 
+                            value={minutes} 
+                            onChange={handleMinutes} 
+                            className="form-input timer-input"
+                            placeholder="Minutes"
+                            min="1"
+                            required
+                        />
+                        <span className="input-label">Minutes</span>
                         </div>
                         <div className="timer-input-group">
-                            <input 
-                                type="number" 
-                                value={seconds} 
-                                onChange={handleSeconds} 
-                                className="form-input timer-input"
-                                placeholder="Seconds"
-                            />
-                            <span className="input-label">Seconds</span>
+                        <input 
+                            type="number" 
+                            value={seconds} 
+                            onChange={handleSeconds} 
+                            className="form-input timer-input"
+                            placeholder="Seconds"
+                            min="1"
+                            required
+                        />
+                        <span className="input-label">Seconds</span>
                         </div>
                     </div>
                 </div>

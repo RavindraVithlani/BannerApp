@@ -11,12 +11,16 @@ export const getTimeComponents = (timeRemaining) => {
     return { days, hours, minutes, seconds };
 };
 
-export const calculateDeadline = (days, hours, seconds) => {
-    const totalSeconds = (days * 24 * 60 * 60) + (hours * 60 * 60) + seconds;
+export const calculateDeadline = (days, hours, minutes, seconds) => {
+    const daysInMs = days * 24 * 60 * 60 * 1000;
+    const hoursInMs = hours * 60 * 60 * 1000;
+    const minutesInMs = minutes * 60 * 1000;
+    const secondsInMs = seconds * 1000;
   
-    const now = Math.floor(Date.now() / 1000);
+    const now = new Date().getTime(); // current time in milliseconds
   
-    let deadline = now + totalSeconds;
+    const totalTimeInMs = daysInMs + hoursInMs + minutesInMs + secondsInMs;
+    const deadlineTimestamp = now + totalTimeInMs;
   
-    return deadline;
+    return deadlineTimestamp;
   };
