@@ -7,7 +7,7 @@ const BannerPage = ({ handleDashboard, timeRemaining, setTimeRemaining, setIsVis
   useEffect(() => {
     const fetchEndDate = async () => {
       try {
-        const response = await fetch('http://api.spava.in/api/banner');
+        const response = await fetch('https://api.spava.in/api/banner');
         const data = await response.json();
         const { is_visible, duration } = data;
 

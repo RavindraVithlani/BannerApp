@@ -15,7 +15,7 @@ export default function Dashboard({ handleDashboard, setTimeRemaining, isVisible
         const duration = calculateDeadline(days, hours,minutes, seconds);
     
         try {
-            const response = await fetch('http://api.spava.in/api/banner', {
+            const response = await fetch('https://api.spava.in/api/banner', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
