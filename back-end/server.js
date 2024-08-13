@@ -11,45 +11,43 @@ const pool = sql.createPool({
     password: process.env.PASSWORD,
     database: process.env.DB
 });
-async function createDB() {
-    try {
-        let connection = await sql.createConnection({
-            host: process.env.HOST,
-            user: process.env.USER
-        });
-        await connection.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB}`);
-        connection.end();
-    } catch (error) {
-        console.error('Creating Database Error:', error);
-    } 
-}
 
 
 
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to MySQL Database.');
-});
 
 // Get banner details
-app.get('/api/banner', (req, res) => {
-    db.query('SELECT * FROM banners ORDER BY id DESC LIMIT 1', (err, result) => {
-        if (err) throw err;
-        res.json(result[0]);
-    });
+app.get('/api/banner', async (req, res) => {
+    try{
+        const connection = await pool.getConnection();
+        const [rows] = await connection.execute("SELECT * FROM dashboard ORDER BY id DESC LIMIT 1");
+        connection.release();
+        if (rows.length ==='0'){
+            res.status(404).json({error:'no record found'});
+        }
+        else{
+            res.json(rows[0]);
+        }
+    }
+    catch(e){
+        console.error('Error executing SQL:', e);
+        res.status(500).json({ error: e.message });
+    }
 });
 
 // Update banner details
-app.post('/api/banner', (req, res) => {
-    const { is_visible, description, timer, link } = req.body;
-    db.query(
-        'INSERT INTO banners (is_visible, description, timer, link) VALUES (?, ?, ?, ?)',
-        [is_visible, description, timer, link],
-        (err, result) => {
-            if (err) throw err;
-            res.json({ message: 'Banner updated successfully.' });
-        }
-    );
+app.post('/api/banner', async (req, res) => {
+    const { is_visible, duration } = req.body;
+    try{
+        const connection = await pool.getConnection();
+        const [rows] = await connection.execute('INSERT INTO dashboard (is_visible, description, timer, link) VALUES (?, ?)',[is_visible, duration]);
+        connection.release();
+        res.json({message:'success'});
+    }
+    catch(e){
+        console.error('Error executing SQL:', e);
+        res.status(500).json({ error: e.message });
+    }
+    
 });
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

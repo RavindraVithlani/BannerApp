@@ -18,18 +18,6 @@ A simple Node.js backend microservice for CRUD operations.
 1. Start the server using `npm start`.
 2. Access the API endpoints using a tool like Postman.
 
-## API Endpoints
-
-- **POST /entity**: Insert a new record into the database.
-- **GET /entity/:id**: Retrieve details of a specific entity by ID.
-- **PUT /entity/:id**: Update details of a specific entity by ID.
-- **DELETE /entity/:id**: Delete a specific entity by ID.
-
-## Testing
-
-1. Import the provided Postman collection. (Named as Testing CRUD Operations Endpoints.postman_collection.json)
-2. Test the API endpoints.
-3. The postman collection contains the guide to test the endpoints.
 
 ## Notes
 
