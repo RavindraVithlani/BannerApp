@@ -5,7 +5,7 @@ import './App.css';
 import Dashboard from './components/dashboard';
 
 const App = () => {
-  const [dashboard, setDashboard] = useState(true);
+  const [dashboard, setDashboard] = useState(false);
   const handleDashboard = ()=>{
     setDashboard(!dashboard);
   }
